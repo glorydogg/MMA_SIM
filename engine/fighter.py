@@ -12,8 +12,8 @@ class Fighter:
     def take_damage(self, dmg):
         self.health = max(0, self.health - dmg)
     
-    def use_stamina(self):
-        self.stamina = max(0, self.stamina - 5)
+    def use_stamina(self, num):
+        self.stamina = max(0, self.stamina - num)
     
     def recover_stamina(self):
         self.stamina = max(0, self.stamina + 10) 
@@ -26,7 +26,7 @@ class Fighter:
 
     def is_knocked_out(self):
         if self.health <= 0:
-            print(f"{self.name} has been kncoked out!")
+            print(f"{self.name} has been knocked out!")
             return True
         return False
 
