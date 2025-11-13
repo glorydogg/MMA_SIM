@@ -7,6 +7,19 @@ class Fighter:
         self.stamina = stamina
         self.health = 100
 
+        # fight stats
+
+        self.landed = 0
+        self.missed = 0
+        self.total_damage = 0
+
+        # per round stats
+
+        self.round_landed = 0
+        self.round_missed = 0
+        self.round_total_damage = 0
+        
+
    
 
     def take_damage(self, dmg):
@@ -29,6 +42,15 @@ class Fighter:
             print(f"{self.name} has been knocked out!")
             return True
         return False
+    
+    def fight_summary(self):
+        total_strikes = self.landed + self.missed
+        accuracy = (self.landed/ total_strikes * 100) if total_strikes else 0
+        print(f"\n> {self.name}")
+        print(f"Total landed: {self.landed}")
+        print(f"Total missed: {self.missed}")
+        print(f"Accuracy: {accuracy:.1f}%")
+        print(f"Total Damage Inflicted: {self.total_damage:.1f}")
 
 
 
