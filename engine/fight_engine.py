@@ -1,13 +1,22 @@
-from fighter import Fighter
+from engine.fighter import Fighter
+from utils.logger import FightLogger
 import random
 import time
+
+logger = FightLogger()
+
+
 
 class FightManager:
     def __init__(self, fighter1, fighter2):
         self.f1 = fighter1
         self.f2 = fighter2
         self.phase = "standup"
-
+        self.winner = None
+        self.win_type = None
+        self.current_round = 1
+        self.fight_over = False
+        
     def punch(self, attacker, defender):
         base_damage = random.randint(1, 5) 
         fighter_dmg = base_damage * (attacker.effective_power /100)
@@ -128,7 +137,7 @@ class FightManager:
 
         print(f"{attacker.name} lands another blow from top control on {defender.name}!\n")
     
-    def defend(self, attacker, defender):
+    def defend(self, defender):
         print(f"{defender.name} defending strikes while on the bottom!\n")
         defender.use_stamina(2)
 
@@ -162,17 +171,44 @@ class FightManager:
             print(f"{defender.name} taps out! {attacker.name} wins via submission!\n")
             defender.health = 0 
             self.phase = "standup"
+            self.win_type = "Submission"
+            self.winner = attacker.name
+
+            self.fight_over = True
+            self.end_fight()
+            return
         else:
             print(f"{defender.name} survives the choke attempt!\n")
             attacker.use_stamina(10)
+
+    def end_fight(self):
+        print("\n--- FINAL FIGHT SUMMARY ---")
+        self.f1.fight_summary()
+        self.f2.fight_summary()
+        
+        # after fight ends
+        self.fight_over = True
+
+        fight_data = {
+            "fighter1": self.f1.name,
+            "fighter2": self.f2.name,
+            "winner": self.winner,
+            "method": self.win_type,
+            "round": self.current_round
+        }
+        
+        logger.log_fight(fight_data)
+
 
     def fight(self):
         print(f"Fight has started between {self.f1.name} and {self.f2.name}!\n")
         total_rounds = 3
         round_turns = 12
            
-        for round_num in range(1, total_rounds + 1):
-            print(f"--- Round {round_num} ---")
+        while self.current_round <= total_rounds:
+            if self.fight_over:
+                return
+            print(f"--- Round {self.current_round} ---")
             self.f1.phase = "standup"
             self.f2.phase = "standup"
             self.phase = "standup"
@@ -182,6 +218,20 @@ class FightManager:
             self.f2.round_takedown_landed = self.f2.round_takedown_attempts = 0
 
             for turn in range(1, round_turns + 1):
+                if self.fight_over:
+                    return
+                    
+                if self.f1.is_knocked_out():
+                    self.winner = self.f2.name
+                    self.win_type = "KO"
+                    self.end_fight()
+                    return
+                elif self.f2.is_knocked_out():
+                    self.winner = self.f1.name
+                    self.win_type = "KO"
+                    self.end_fight()
+                    return
+            
                 if self.phase == "standup":
                     #alternate turns
                     attacker, defender = (self.f1, self.f2) if turn % 2 == 1 else (self.f2, self.f1)
@@ -193,50 +243,53 @@ class FightManager:
                         self.ground_control(self.f1, self.f2) 
                     elif self.f2.phase == "ground_top":
                         self.ground_control(self.f2, self.f1)  
-                if turn % 4 == 0:
-                    print(f"[DEBUG] {self.f1.name} stamina: {self.f1.stamina:.1f}, {self.f2.name} stamina: {self.f2.stamina:.1f}")
 
 
-                if self.f1.is_knocked_out() or self.f2.is_knocked_out():
-                    self.f1.fight_summary()
-                    self.f2.fight_summary()
+                if self.fight_over:
                     return
                     
             
-            print(f"End of round {round_num}!\n")
+            print(f"End of round {self.current_round}!\n")
             # end of round fighter 1 stats
-            print(f"Round {round_num} Stats for {self.f1.name}: \nHits landed: {self.f1.round_landed} ")
+            print(f"Round {self.current_round} Stats for {self.f1.name}: \nHits landed: {self.f1.round_landed} ")
             print(f"Hits missed: {self.f1.round_missed}\nTotal Damage: {self.f1.round_total_damage:.1f}\n")
             print(f"Takedowns landed: {self.f1.round_takedown_landed}")
             print(f"Takedowns attempts: {self.f1.round_takedown_attempts}\n")
             
             #end of round fighter 2 stats
-            print(f"Round {round_num} Stats for {self.f2.name}: \nHits landed: {self.f2.round_landed} ")
-            print(f"Hits missed: {self.f2.round_missed}\nRound Damage: {self.f2.round_total_damage:.1f}")
+            print(f"Round {self.current_round} Stats for {self.f2.name}: \nHits landed: {self.f2.round_landed} ")
+            print(f"Hits missed: {self.f2.round_missed}\nRound Damage: {self.f2.round_total_damage:.1f}\n")
             print(f"Takedowns landed: {self.f2.round_takedown_landed}")
             print(f"Takedowns attempts: {self.f2.round_takedown_attempts}\n")
-            
 
             self.f1.recover_stamina()
             self.f2.recover_stamina()
+
+            if self.current_round < total_rounds:
+                self.current_round += 1
+            
            
-
-        if self.f1.health >= self.f2.health:
+            
+        if self.f1.health > self.f2.health and self.current_round >= 3:
             print(f"\n{self.f1.name} is the winner by judges decision!")
-        else:
+            self.winner = self.f1.name
+            self.win_type = "Decision"
+            self.end_fight()
+            return
+                
+        elif self.f1.health < self.f2.health and self.current_round >= 3:
             print(f"\n{self.f2.name} is the winner by judges decision!")
+            self.winner = self.f2.name
+            self.win_type = "Decision"
+            self.end_fight()
+            return
 
-        print("\n--- FINAL FIGHT SUMMARY ---")
-        self.f1.fight_summary()
-        self.f2.fight_summary()
+        
+
+
+        
 
 
 
 
-
-if __name__ == "__main__":
-    fighter1 = Fighter("McGregor", power=80, accuracy=90, stamina=100, grappling= 85, takedown_defense= 95)
-    fighter2 = Fighter("Khabib", power=85, accuracy=85, stamina=100, grappling= 99, takedown_defense= 95)
-
-    engine = FightManager(fighter1, fighter2)
-    engine.fight()
+    
