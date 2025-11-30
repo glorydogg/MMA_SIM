@@ -207,6 +207,7 @@ class FightManager:
            
         while self.current_round <= total_rounds:
             if self.fight_over:
+                self.end_fight()
                 return
             print(f"--- Round {self.current_round} ---")
             self.f1.phase = "standup"
@@ -267,6 +268,8 @@ class FightManager:
 
             if self.current_round < total_rounds:
                 self.current_round += 1
+            else:
+                break
             
            
             
