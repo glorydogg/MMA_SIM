@@ -1,7 +1,7 @@
 from engine.fighter import Fighter
+from engine.commentary import say
 from utils.logger import FightLogger
 import random
-import time
 
 logger = FightLogger()
 
@@ -25,14 +25,14 @@ class FightManager:
         if random.randint(1, 100) <= attacker.effective_accuracy:
             defender.health -= fighter_dmg
             attacker.use_stamina(3)
-            print(f"{attacker.name} lands a jab on {defender.name}!\n")
+            print(say("punch", attacker.name, defender.name))
             attacker.landed += 1
             attacker.round_landed += 1
             attacker.total_damage += fighter_dmg
             attacker.round_total_damage += fighter_dmg
         else:
             attacker.use_stamina(6)
-            print(f"{attacker.name} misses the jab!\n")
+            print(say("punch_miss", attacker.name, defender.name))
             attacker.missed += 1 
             attacker.round_missed += 1
         
@@ -42,13 +42,7 @@ class FightManager:
 
         # hit chance
         if random.randint(1, 100) <= attacker.effective_accuracy - 15: 
-
-            descriptions = [
-                f"{attacker.name} lands a strong head kick on {defender.name}!\n",
-                f"{attacker.name} with a nice calf kick on {defender.name}!\n",
-                f"{attacker.name} with the kick to the body on {defender.name}!\n"
-            ]
-            print(random.choice(descriptions))
+            print(say("kick", attacker.name, defender.name))
             defender.health -= fighter_dmg
             attacker.use_stamina(5)
             attacker.landed += 1
@@ -56,7 +50,7 @@ class FightManager:
             attacker.total_damage += fighter_dmg
             attacker.round_total_damage += fighter_dmg
         else:
-            print(f"{attacker.name} attempts a kick but misses!\n")
+            print(say("kick_miss", attacker.name, defender.name))
             attacker.use_stamina(8)
             attacker.missed += 1
             attacker.round_missed += 1
@@ -69,19 +63,19 @@ class FightManager:
         if random.randint(1, 100) <= attacker.effective_accuracy - 25:  
             defender.health -= fighter_dmg
             attacker.use_stamina(4)
-            print(f"{attacker.name} with the vicious elbow on {defender.name}!!\n")
+            print(say("elbow", attacker.name, defender.name))
             attacker.landed += 1
             attacker.round_landed += 1
             attacker.total_damage += fighter_dmg
             attacker.round_total_damage += fighter_dmg
         else:
             attacker.use_stamina(6)
-            print(f"{attacker.name} misses an elbow on {defender.name}!\n")
+            print(say("elbow_miss", attacker.name, defender.name))
             attacker.missed += 1
             attacker.round_missed += 1
 
     def takedown(self, attacker, defender):
-        print(f"{attacker.name} attempts a double leg on {defender.name}!\n")
+        print(say("takedown_attempt", attacker.name, defender.name))
         
         # Calculate takedown success chance
         skill_diff = attacker.grappling - defender.takedown_defense
@@ -94,7 +88,7 @@ class FightManager:
         #outcome
         roll = random.randint(1, 100)
         if roll <= final_chance:
-            print(f"{attacker.name} secures the takedown and moves to top control!\n")
+            print(say("takedown_success", attacker.name, defender.name))
             attacker.phase = "ground_top"
             defender.phase = "ground_bottom"
             self.phase = "ground"
@@ -105,7 +99,7 @@ class FightManager:
             attacker.takedowns_landed += 1
             attacker.takedown_attempts += 1
         else:
-            print(f"{defender.name} sprawls and stuffs the takedown!\n")
+            print(say("takedown_fail", attacker.name, defender.name))
             attacker.use_stamina(12)
             defender.use_stamina(5)
             attacker.round_takedown_attempts += 1
@@ -164,11 +158,11 @@ class FightManager:
                 ]))
         
     def submission_attempt(self, attacker, defender):
-        print(f"{attacker.name} attempts a rear naked choke!\n")
+        print(say("submission_attempt", attacker.name, defender.name))
         chance = 20 + (attacker.grappling - defender.submission_defense) * 0.3
         chance = max(5, min(80, chance))
         if random.randint(1, 100) <= chance:
-            print(f"{defender.name} taps out! {attacker.name} wins via submission!\n")
+            print(say("submission_win", attacker.name, defender.name))
             defender.health = 0 
             self.phase = "standup"
             self.win_type = "Submission"
@@ -178,7 +172,7 @@ class FightManager:
             self.end_fight()
             return
         else:
-            print(f"{defender.name} survives the choke attempt!\n")
+            print(say("submission_fail", attacker.name, defender.name))
             attacker.use_stamina(10)
 
     def end_fight(self):
