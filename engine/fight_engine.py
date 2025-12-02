@@ -1,5 +1,6 @@
 from engine.fighter import Fighter
 from engine.commentary import say
+from engine.judges import score_round
 from utils.logger import FightLogger
 import random
 
@@ -16,6 +17,7 @@ class FightManager:
         self.win_type = None
         self.current_round = 1
         self.fight_over = False
+        self.score_cards = [[], [], []]
         
     def punch(self, attacker, defender):
         base_damage = random.randint(1, 5) 
@@ -193,6 +195,53 @@ class FightManager:
         
         logger.log_fight(fight_data)
 
+    def print_scorecards(self):
+        print("--- OFFICIAL SCORECARDS ---\n")
+        for j, judge in enumerate(self.score_cards, 1):
+            print(f"Judge {j}\n")
+            for r, (f1, f2) in enumerate(judge, 1):
+                print(f"  Round {r}: {self.f1.name} {f1} - {f2} {self.f2.name}")
+
+        if self.winner:
+            print(f"\n{self.winner} wins by {self.win_type}!")
+        else:
+            print(f"This fight is ruled a {self.win_type}.")
+
+
+
+    def get_judges_desision(self):
+        f1_votes = 0
+        f2_votes = 0
+        draw_votes = 0
+
+        for card in self.score_cards:
+            f1_total = sum(r[0] for r in card)
+            f2_total = sum(r[1] for r in card)
+
+            if f1_total > f2_total:
+                f1_votes += 1 
+            elif f2_total > f1_total:
+                f2_votes += 1
+            else:
+                draw_votes += 1
+
+        # ---- Decision types ----
+
+        if f1_votes == 3:
+            self.win_type = "Unanimous Decision"
+            self.winner = self.f1.name
+        elif f2_votes == 3:
+            self.win_type = "Unanimous Decision"
+            self.winner = self.f2.name
+        elif f1_votes > f2_votes:
+            self.win_type = "Split Decision"
+            self.winner = self.f1.name
+        elif f2_votes > f1_votes:
+            self.win_type = "Split Decision"
+            self.winner = self.f2.name
+        else:
+            self.win_type = "Majority Draw"
+            self.winner = None
 
     def fight(self):
         print(f"Fight has started between {self.f1.name} and {self.f2.name}!\n")
@@ -260,24 +309,37 @@ class FightManager:
             self.f1.recover_stamina()
             self.f2.recover_stamina()
 
+            round_stats_f1 = {
+                "f1_landed": self.f1.round_landed,
+                "f1_damage": self.f1.round_total_damage,
+                "f1_takedowns": self.f1.round_takedown_landed
+            }
+            round_stats_f2 = {
+                "f2_landed": self.f2.round_landed,
+                "f2_damage": self.f2.round_total_damage,
+                "f2_takedowns": self.f2.round_takedown_landed
+            }
+
+            round_scores = []
+            for _ in range(3):
+                f1_score, f2_score = score_round(round_stats_f1, round_stats_f2)
+                round_scores.append((f1_score, f2_score))
+            
+            for judge in self.score_cards:
+                judge.append((f1_score, f2_score))
+            
             if self.current_round < total_rounds:
                 self.current_round += 1
             else:
                 break
+
+    
             
            
             
-        if self.f1.health > self.f2.health and self.current_round >= 3:
-            print(f"\n{self.f1.name} is the winner by judges decision!")
-            self.winner = self.f1.name
-            self.win_type = "Decision"
-            self.end_fight()
-            return
-                
-        elif self.f1.health < self.f2.health and self.current_round >= 3:
-            print(f"\n{self.f2.name} is the winner by judges decision!")
-            self.winner = self.f2.name
-            self.win_type = "Decision"
+        if not self.fight_over:
+            self.get_judges_desision()
+            self.print_scorecards()
             self.end_fight()
             return
 

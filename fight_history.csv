@@ -1,8 +1,9 @@
 fighter1,fighter2,winner,method,round
-McGregor,Khabib,Khabib,KO,3
-McGregor,Khabib,Khabib,KO,3
+McGregor,Khabib,,Majority Draw,3
+McGregor,Khabib,Khabib,Submission,3
+McGregor,Khabib,Khabib,Unanimous Decision,3
 McGregor,Khabib,McGregor,KO,3
-McGregor,Khabib,McGregor,Decision,3
-McGregor,Khabib,McGregor,Decision,3
-McGregor,Khabib,McGregor,Submission,3
-McGregor,Khabib,Khabib,Decision,3
+McGregor,Khabib,Khabib,Unanimous Decision,3
+McGregor,Khabib,Khabib,Submission,2
+McGregor,Khabib,McGregor,KO,2
+McGregor,Khabib,Khabib,Unanimous Decision,3
