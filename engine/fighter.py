@@ -21,6 +21,7 @@ class Fighter:
         self.total_damage = 0
         self.takedowns_landed = 0
         self.takedown_attempts = 0
+        self.submission_attempts = 0
         # per round stats
 
         self.round_landed = 0
@@ -28,6 +29,7 @@ class Fighter:
         self.round_total_damage = 0
         self.round_takedown_landed = 0
         self.round_takedown_attempts = 0
+        self.round_submission_attempts = 0
         
 
    
@@ -72,6 +74,7 @@ class Fighter:
         print(f"Accuracy: {accuracy:.1f}%")
         print(f"Total Damage Inflicted: {self.total_damage:.1f}")
         print(f"Total take downs landed vs attempted: {self.takedowns_landed} - {self.takedown_attempts}")
+        print(f"Total submission attempts {self.submission_attempts}")
 
 
 

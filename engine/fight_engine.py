@@ -160,6 +160,7 @@ class FightManager:
                 ]))
         
     def submission_attempt(self, attacker, defender):
+        attacker.submission_attempt += 1
         print(say("submission_attempt", attacker.name, defender.name))
         chance = 20 + (attacker.grappling - defender.submission_defense) * 0.3
         chance = max(5, min(80, chance))
@@ -190,7 +191,9 @@ class FightManager:
             "fighter2": self.f2.name,
             "winner": self.winner,
             "method": self.win_type,
-            "round": self.current_round
+            "round": self.current_round,
+            self.f1.name: self.f1.landed,
+            self.f2.name: self.f2.landed
         }
         
         logger.log_fight(fight_data)
@@ -260,6 +263,7 @@ class FightManager:
             self.f2.round_landed = self.f2.round_missed = 0
             self.f1.round_takedown_landed = self.f1.round_takedown_attempts = 0
             self.f2.round_takedown_landed = self.f2.round_takedown_attempts = 0
+            self.f1.round_submssion_attempt = self.f2.round_submission_attempt = 1
 
             for turn in range(1, round_turns + 1):
                 if self.fight_over:
@@ -299,12 +303,14 @@ class FightManager:
             print(f"Hits missed: {self.f1.round_missed}\nTotal Damage: {self.f1.round_total_damage:.1f}\n")
             print(f"Takedowns landed: {self.f1.round_takedown_landed}")
             print(f"Takedowns attempts: {self.f1.round_takedown_attempts}\n")
+            print(f"Submission attempts: {self.f1.round_submission_attempts}\n")
             
             #end of round fighter 2 stats
             print(f"Round {self.current_round} Stats for {self.f2.name}: \nHits landed: {self.f2.round_landed} ")
             print(f"Hits missed: {self.f2.round_missed}\nRound Damage: {self.f2.round_total_damage:.1f}\n")
             print(f"Takedowns landed: {self.f2.round_takedown_landed}")
             print(f"Takedowns attempts: {self.f2.round_takedown_attempts}\n")
+            print(f"Submission attempts: {self.f2.round_submission_attempts}\n")
 
             self.f1.recover_stamina()
             self.f2.recover_stamina()
