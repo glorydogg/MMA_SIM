@@ -160,7 +160,7 @@ class FightManager:
                 ]))
         
     def submission_attempt(self, attacker, defender):
-        attacker.submission_attempt += 1
+        attacker.submission_attempts += 1
         print(say("submission_attempt", attacker.name, defender.name))
         chance = 20 + (attacker.grappling - defender.submission_defense) * 0.3
         chance = max(5, min(80, chance))
@@ -301,15 +301,15 @@ class FightManager:
             # end of round fighter 1 stats
             print(f"Round {self.current_round} Stats for {self.f1.name}: \nHits landed: {self.f1.round_landed} ")
             print(f"Hits missed: {self.f1.round_missed}\nTotal Damage: {self.f1.round_total_damage:.1f}\n")
+            print(f"Takedowns attempts: {self.f1.round_takedown_attempts}")
             print(f"Takedowns landed: {self.f1.round_takedown_landed}")
-            print(f"Takedowns attempts: {self.f1.round_takedown_attempts}\n")
             print(f"Submission attempts: {self.f1.round_submission_attempts}\n")
             
             #end of round fighter 2 stats
             print(f"Round {self.current_round} Stats for {self.f2.name}: \nHits landed: {self.f2.round_landed} ")
             print(f"Hits missed: {self.f2.round_missed}\nRound Damage: {self.f2.round_total_damage:.1f}\n")
+            print(f"Takedowns attempts: {self.f2.round_takedown_attempts}")
             print(f"Takedowns landed: {self.f2.round_takedown_landed}")
-            print(f"Takedowns attempts: {self.f2.round_takedown_attempts}\n")
             print(f"Submission attempts: {self.f2.round_submission_attempts}\n")
 
             self.f1.recover_stamina()

@@ -74,7 +74,7 @@ class Fighter:
         print(f"Accuracy: {accuracy:.1f}%")
         print(f"Total Damage Inflicted: {self.total_damage:.1f}")
         print(f"Total take downs landed vs attempted: {self.takedowns_landed} - {self.takedown_attempts}")
-        print(f"Total submission attempts {self.submission_attempts}")
+        print(f"Total submission attempts: {self.submission_attempts}")
 
 
 
