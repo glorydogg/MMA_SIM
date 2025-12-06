@@ -1,13 +1,13 @@
 import random
 class Fighter:
-    def __init__(self, name, power, accuracy, stamina, grappling, takedown_defense):
+    def __init__(self, name, power, accuracy, stamina, grappling, takedown_defense, submission_defense):
         self.name = name
         self.power = power
         self.accuracy = accuracy
       
         self.grappling = grappling # just for testing
         self.takedown_defense = takedown_defense
-        self.submission_defense = random.randint(50, 95)
+        self.submission_defense = submission_defense 
         self.stamina = stamina
         self.health = 100
 
