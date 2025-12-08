@@ -31,6 +31,14 @@ class Fighter:
         self.round_takedown_attempts = 0
         self.round_submission_attempts = 0
         
+    def summary(self):
+        print(f"\n--- {self.name} ---")
+        print(f"Power: {self.power}")
+        print(f"Accuracy: {self.accuracy}")
+        print(f"Stamina: {self.stamina}")
+        print(f"Grappling: {self.grappling}")
+        print(f"Takedown Defense: {self.takedown_defense}")
+        print(f"Submission Defense: {self.submission_defense}")
 
    
 
