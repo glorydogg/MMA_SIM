@@ -74,8 +74,8 @@ def main():
         choice = get_valid_int_input("Enter an option: ")   
 
         if choice == 1:
-            manager = FightManager(f1, f2) #run a single fight
-            manager.fight()
+            sim = Simulator(f1, f2) #run a single fight
+            sim.run_one_fight()
             
             input("\nPress enter to continue")
 
