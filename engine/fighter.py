@@ -59,7 +59,7 @@ class Fighter:
     
     @property
     def effective_accuracy(self):
-        return self.accuracy * (0.8 + self.stamina / 125) 
+        return self.accuracy * (0.2 + self.stamina / 125) 
 
     def get_stamina(self):
         return self.stamina
