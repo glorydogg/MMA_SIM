@@ -1,3 +1,4 @@
+from util.awsuploader import S3Uploader
 import pandas as pd 
 import os
 
@@ -12,9 +13,9 @@ class FightLogger:
                   mode="a",
                   index=False,
                   header= not os.path.exists(self.filename))
-        print(f"[Log] Fight recorded to {self.filename}")
+        print(f"\n[Log] Fight recorded to {self.filename}")
 
-    def load_hisotry(self):
+    def load_history(self):
         """ Load full fight history into dataframe """
         if not os.path.exists(self.filename):
             return pd.DataFrame()
