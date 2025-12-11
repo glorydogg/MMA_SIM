@@ -96,14 +96,18 @@ def main():
             # show categories
             fighter_replacement_choice = get_valid_int_input("\nPick 1, 2, or 3: ")
             if fighter_replacement_choice == 3:
-                main()
+                continue
             for i, category in enumerate(ALL_FIGHTERS.keys(), start=1):
                 print(i, category)
                 
-            selected_category = input("Now select a category: ").capitalize()
+            selected_category = input("Now select a category: ").capitalize()    
+            while selected_category not in ALL_FIGHTERS:
+                print("Invalid category.")
+                selected_category = input("Select again: ").capitalize()
+                
 
 
-            print(f"Now pick a fighter from {selected_category}")
+            print(f"Now pick a fighter from {selected_category}: \n")
             for i, fighter in enumerate(ALL_FIGHTERS[selected_category], start=1):
                 print(i, fighter.name)
                 
