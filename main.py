@@ -90,14 +90,17 @@ def main():
         elif choice == 3:   
             print("Which fighter do you want to replace?")
             print(f"Fighter 1: {f1.name}")
-            print(f"Fighter 2: {f2.name}")
+            print(f"Fighter 2: {f2.name}\n \nOr 3 to continue")
+            
 
             # show categories
-            fighter_replacement_choice = get_valid_int_input("Pick 1 or 2: ")
+            fighter_replacement_choice = get_valid_int_input("\nPick 1, 2, or 3: ")
+            if fighter_replacement_choice == 3:
+                main()
             for i, category in enumerate(ALL_FIGHTERS.keys(), start=1):
                 print(i, category)
                 
-            selected_category = input("Now selected a category: ")
+            selected_category = input("Now select a category: ").capitalize()
 
 
             print(f"Now pick a fighter from {selected_category}")

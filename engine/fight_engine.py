@@ -9,6 +9,12 @@ logger = FightLogger()
 
 
 class FightManager:
+
+    # Class-level constants
+    
+    MAX_ROUNDS = 3
+    TURNS_PER_ROUND = 12
+    
     def __init__(self, fighter1, fighter2):
         self.f1 = fighter1
         self.f2 = fighter2
@@ -248,10 +254,9 @@ class FightManager:
 
     def fight(self):
         print(f"Fight has started between {self.f1.name} and {self.f2.name}!\n")
-        total_rounds = 3
-        round_turns = 12
+        
            
-        while self.current_round <= total_rounds:
+        while self.current_round <= FightManager.MAX_ROUNDS:
             if self.fight_over:
                 self.end_fight()
                 return
@@ -265,7 +270,7 @@ class FightManager:
             self.f2.round_takedown_landed = self.f2.round_takedown_attempts = 0
             self.f1.round_submssion_attempt = self.f2.round_submission_attempt = 1
 
-            for turn in range(1, round_turns + 1):
+            for turn in range(1, FightManager.TURNS_PER_ROUND + 1):
                 if self.fight_over:
                     return
                     
@@ -334,7 +339,7 @@ class FightManager:
             for judge in self.score_cards:
                 judge.append((f1_score, f2_score))
             
-            if self.current_round < total_rounds:
+            if self.current_round < FightManager.MAX_ROUNDS:
                 self.current_round += 1
             else:
                 break
