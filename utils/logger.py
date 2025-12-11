@@ -1,19 +1,31 @@
-from util.awsuploader import S3Uploader
+from aws.aws_uploader import S3Uploader
 import pandas as pd 
 import os
+
+uploader = S3Uploader()
 
 class FightLogger:
     def __init__(self, filename= "fight_history.csv"):
         self.filename = filename
         
     def log_fight(self, fight_data: dict):
-        """ Append fight data to csv """
+        """ Save locally """
         df = pd.DataFrame([fight_data])
         df.to_csv(self.filename,
                   mode="a",
                   index=False,
                   header= not os.path.exists(self.filename))
         print(f"\n[Log] Fight recorded to {self.filename}")
+
+
+        # Upload to s3
+        success = uploader.upload(self.filename, self.filename)
+
+        if success:
+            print(f"[Upload] Uploaded to {self.filename} to s3!")
+        else:
+            print(f"[Upload] to s3 failed!")
+
 
     def load_history(self):
         """ Load full fight history into dataframe """

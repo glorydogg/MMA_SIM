@@ -1,0 +1,14 @@
+[
+  "tests/test_fighter.py::test_effective_accuracy_changes_with_stamina",
+  "tests/test_fighter.py::test_effective_power_changes_with_stamina",
+  "tests/test_fighter.py::test_effectivepower_changes_with_stamina",
+  "tests/test_fighter.py::test_health_cant_go_below_zero",
+  "tests/test_fighter.py::test_knockout_false",
+  "tests/test_fighter.py::test_knockout_true",
+  "tests/test_fighter.py::test_low_stamina_penalty",
+  "tests/test_fighter.py::test_stamina",
+  "tests/test_fighter.py::test_stamina_basic",
+  "tests/test_fighter.py::test_stamina_never_negative",
+  "tests/test_fighter.py::test_take_damage",
+  "tests/test_judges.py::test_judge_damage_win"
+]

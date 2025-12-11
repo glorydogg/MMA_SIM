@@ -2,6 +2,9 @@ import boto3
 import os
 from dotenv import load_dotenv
 
+# load env variables from .env
+load_dotenv()
+
 class S3Uploader:
     def __init__(self):
         # load env variables from .env
@@ -9,9 +12,9 @@ class S3Uploader:
 
         # Retrieve AWS creditionals and config
         self.bucket = os.getenv ("AWS_BUCKET_NAME")
-        self.region = os.getenv("AWS_REGION")
+        self.region = os.getenv("AWS_REGION_NAME")
 
-        self.aws_access_key = os.getenv("AWS_ACCESS-KEY")
+        self.aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
         self.aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 
         # Initialize client
@@ -21,11 +24,17 @@ class S3Uploader:
             aws_secret_access_key=self.aws_secret_access_key,
             region_name=self.region
         )
+        print("DEBUG:", self.aws_access_key, self.aws_secret_access_key)
+
 
     def upload(self, local_path, s3_key):
         """ Uploads a file to s3 bucket """
         try:
             self.s3.upload_file(local_path, self.bucket, s3_key)
             print(f"[AWS] Uploaded {local_path} -> s3://{self.bucket}/{s3_key}")
+            return True
         except Exception as e:
             print(f"[AWS ERROR] {e}")
+            return False
+        
+        

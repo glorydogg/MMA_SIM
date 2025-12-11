@@ -1,0 +1,16 @@
+# Created by pytest automatically.
+#Environment variables
+.env
+#Python cache
+__pycache__/
+*.pyc
+
+#fight logs 
+fight_history.csv
+
+#notes
+notes.txt
+
+#pytest cache
+ .pytest_cache/
+ aws/__pycache__/

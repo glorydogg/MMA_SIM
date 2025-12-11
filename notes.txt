@@ -1,0 +1,79 @@
+
+
+⭐⭐ AWS Option B: Save all fighter stats into DynamoDB
+
+This makes your project feel like a real backend simulation system.
+
+DynamoDB table: FighterStats
+
+fighter_name (PK)
+
+wins
+
+losses
+
+KO_wins
+
+SUB_wins
+
+DEC_wins
+
+total_fights
+
+Every batch simulation updates the table.
+
+Small example:
+import boto3
+
+db = boto3.resource("dynamodb")
+table = db.Table("FighterStats")
+
+def update_dynamodb(fighter_name, result):
+    table.update_item(
+        Key={"fighter_name": fighter_name},
+        UpdateExpression="ADD wins :w",
+        ExpressionAttributeValues={":w": 1},
+    )
+
+
+This alone is super impressive for internship apps.
+
+⭐⭐⭐ AWS Option C (Strongest): Build an API with AWS Lambda + API Gateway
+
+This means your MMA engine becomes a serverless API.
+Example endpoints:
+
+Method	Endpoint	Description
+POST	/simulate	Runs 1 fight
+POST	/batch	Runs N fights
+GET	/fighters	Returns all fighters
+GET	/stats	Returns AWS-stored fight stats
+
+A Lambda handler calls your simulation:
+
+def lambda_handler(event, context):
+    f1 = Fighter(...)
+    f2 = Fighter(...)
+
+    sim = Simulator(f1, f2)
+    sim.run_batch(event["n"])
+
+    return {"results": sim.results}
+
+
+This makes your project:
+
+deployable
+
+callable from web apps
+
+portfolio GOLD
+
+internship interviewer bait
+
+💥 What I recommend YOU do (based on timeline + skill level + value)**
+1. Polish small fixes → done in 1–2 hours.
+2. Add AWS S3 logging first (Option A). Easy win, looks great.
+3. THEN add DynamoDB (Option B) — your biggest resume upgrade.
+
+You don’t need Option C unless you want to flex HARD.
